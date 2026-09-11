@@ -213,7 +213,7 @@ export default function CheckoutPage() {
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input type="text" value={form.name} onChange={handle('name')} placeholder="Prajval Kedlaya"
-                    className={`w-full pl-9 pr-3 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 ${errors.name ? 'border-red-400 bg-red-50' : 'border-gray-200'}`} />
+                    className={`w-full pl-9 pr-3 py-2.5 border rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 ${errors.name ? 'border-red-400 bg-red-50' : 'border-gray-200'}`} />
                 </div>
                 {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
               </div>
@@ -223,7 +223,7 @@ export default function CheckoutPage() {
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input type="tel" value={form.phone} onChange={handle('phone')} placeholder="9876543210"
-                    className={`w-full pl-9 pr-3 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 ${errors.phone ? 'border-red-400 bg-red-50' : 'border-gray-200'}`} />
+                    className={`w-full pl-9 pr-3 py-2.5 border rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 ${errors.phone ? 'border-red-400 bg-red-50' : 'border-gray-200'}`} />
                 </div>
                 {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
               </div>
@@ -233,7 +233,7 @@ export default function CheckoutPage() {
                 <div className="relative">
                   <MapPin className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
                   <textarea value={form.address} onChange={handle('address')} placeholder="Flat/House No, Building name, Street..." rows={2}
-                    className={`w-full pl-9 pr-3 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 ${errors.address ? 'border-red-400 bg-red-50' : 'border-gray-200'}`} />
+                    className={`w-full pl-9 pr-3 py-2.5 border rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 ${errors.address ? 'border-red-400 bg-red-50' : 'border-gray-200'}`} />
                 </div>
                 {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
               </div>
@@ -241,14 +241,14 @@ export default function CheckoutPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">City *</label>
                 <input type="text" value={form.city} onChange={handle('city')} placeholder="Amaravati"
-                  className={`w-full px-3 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 ${errors.city ? 'border-red-400 bg-red-50' : 'border-gray-200'}`} />
+                  className={`w-full px-3 py-2.5 border rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 ${errors.city ? 'border-red-400 bg-red-50' : 'border-gray-200'}`} />
                 {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pincode *</label>
                 <input type="text" value={form.pincode} onChange={handle('pincode')} placeholder="522001"
-                  className={`w-full px-3 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 ${errors.pincode ? 'border-red-400 bg-red-50' : 'border-gray-200'}`} />
+                  className={`w-full px-3 py-2.5 border rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 ${errors.pincode ? 'border-red-400 bg-red-50' : 'border-gray-200'}`} />
                 {errors.pincode && <p className="text-red-500 text-xs mt-1">{errors.pincode}</p>}
               </div>
 
@@ -257,7 +257,7 @@ export default function CheckoutPage() {
                 <div className="relative">
                   <FileText className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
                   <textarea value={form.notes} onChange={handle('notes')} placeholder="E.g., Ring bell twice, leave with security..." rows={2}
-                    className="w-full pl-9 pr-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none dark:bg-gray-700 dark:text-gray-100" />
+                    className="w-full pl-9 pr-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none dark:bg-gray-700 dark:text-gray-100" />
                 </div>
               </div>
             </div>
@@ -342,7 +342,7 @@ export default function CheckoutPage() {
                     value={promoCode}
                     onChange={e => setPromoCode(e.target.value)}
                     placeholder="E.g. HEALTH50"
-                    className="flex-1 px-3 py-2 uppercase border border-gray-200 dark:border-gray-700 rounded-xl text-xs dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-3 py-2 uppercase border border-gray-200 dark:border-gray-700 rounded-xl text-base sm:text-xs dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <button
                     type="button"

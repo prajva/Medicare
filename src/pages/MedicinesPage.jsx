@@ -52,7 +52,7 @@ export default function MedicinesPage() {
           value={search}
           onChange={e => handleSearch(e.target.value)}
           placeholder="Search by name, antibiotic, or symptoms..."
-          className="w-full pl-12 pr-10 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 dark:text-gray-100 shadow-sm"
+          className="w-full pl-12 pr-10 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 dark:text-gray-100 shadow-sm"
         />
         {search && (
           <button
@@ -81,7 +81,7 @@ export default function MedicinesPage() {
         ))}
       </div>
 
-      {/* Product Grid - ONLY the 5 uploaded medicines */}
+      {/* Product Grid */}
       {filtered.length === 0 ? (
         <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 p-8">
           <div className="text-6xl mb-4">🔍</div>
@@ -91,7 +91,7 @@ export default function MedicinesPage() {
             onClick={() => { handleSearch(''); handleCategoryChange('All') }}
             className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-semibold hover:underline text-sm"
           >
-            <X className="w-4 h-4" /> Show All 5 Products
+            <X className="w-4 h-4" /> Show All Products
           </button>
         </div>
       ) : (
