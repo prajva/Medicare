@@ -34,10 +34,15 @@ export default function OrdersPage() {
       where('userId', '==', user.uid),
       orderBy('createdAt', 'desc')
     )
-    getDocs(q).then(snap => {
-      setOrders(snap.docs.map(d => ({ id: d.id, ...d.data() })))
-      setLoading(false)
-    })
+    getDocs(q)
+      .then(snap => {
+        setOrders(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+        setLoading(false)
+      })
+      .catch(err => {
+        console.warn('Orders query notice:', err?.message)
+        setLoading(false)
+      })
   }, [user])
 
   const toggle = id => setExpanded(p => ({ ...p, [id]: !p[id] }))

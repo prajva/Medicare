@@ -23,8 +23,8 @@ export function AuthProvider({ children }) {
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser)
-        await fetchProfile(firebaseUser.uid)
-        seedMedicines().catch(console.error)
+        await fetchProfile(firebaseUser.uid, firebaseUser)
+        seedMedicines().catch(() => {})
       } else {
         setUser(null)
         setProfile(null)
@@ -34,22 +34,53 @@ export function AuthProvider({ children }) {
     return unsub
   }, [])
 
-  async function fetchProfile(uid) {
-    const snap = await getDoc(doc(db, 'profiles', uid))
-    if (snap.exists()) setProfile(snap.data())
+  async function fetchProfile(uid, currentUser) {
+    try {
+      const snap = await getDoc(doc(db, 'profiles', uid))
+      if (snap.exists()) {
+        setProfile(snap.data())
+        return
+      }
+    } catch (err) {
+      console.warn('Firestore profile lookup notice:', err?.message)
+    }
+
+    // Fallback to Firebase Auth user credentials if Firestore profile is not yet created or blocked
+    if (currentUser) {
+      setProfile(prev => prev || {
+        fullName: currentUser.displayName || currentUser.email?.split('@')[0] || 'User',
+        email: currentUser.email || '',
+        phone: currentUser.phoneNumber || '',
+      })
+    }
   }
 
   // ── Email/Password Signup ─────────────────────────────────
   async function signUp({ email, password, fullName, phone }) {
     try {
       const { user: newUser } = await createUserWithEmailAndPassword(auth, email, password)
-      await updateProfile(newUser, { displayName: fullName })
-      await setDoc(doc(db, 'profiles', newUser.uid), {
-        uid: newUser.uid, fullName, phone, email, createdAt: new Date(),
-      })
+      if (fullName) {
+        await updateProfile(newUser, { displayName: fullName }).catch(() => {})
+      }
+      
+      // Attempt saving to Firestore profile; do not block login if Firestore rules reject
+      try {
+        await setDoc(doc(db, 'profiles', newUser.uid), {
+          uid: newUser.uid,
+          fullName,
+          phone,
+          email,
+          createdAt: new Date(),
+        })
+      } catch (dbErr) {
+        console.warn('Firestore profile write skipped:', dbErr?.message)
+      }
+
       setProfile({ fullName, phone, email })
       return { error: null }
-    } catch (err) { return { error: err } }
+    } catch (err) {
+      return { error: err }
+    }
   }
 
   // ── Email/Password Login ──────────────────────────────────
@@ -57,7 +88,9 @@ export function AuthProvider({ children }) {
     try {
       await signInWithEmailAndPassword(auth, email, password)
       return { error: null }
-    } catch (err) { return { error: err } }
+    } catch (err) {
+      return { error: err }
+    }
   }
 
   // ── Google Login ──────────────────────────────────────────
@@ -65,20 +98,34 @@ export function AuthProvider({ children }) {
     try {
       const provider = new GoogleAuthProvider()
       const { user: googleUser } = await signInWithPopup(auth, provider)
-      // Create profile if first time
-      const profileRef = doc(db, 'profiles', googleUser.uid)
-      const profileSnap = await getDoc(profileRef)
-      if (!profileSnap.exists()) {
-        await setDoc(profileRef, {
-          uid:       googleUser.uid,
-          fullName:  googleUser.displayName || '',
-          phone:     googleUser.phoneNumber || '',
-          email:     googleUser.email,
-          createdAt: new Date(),
-        })
+
+      // Sync profile safely without breaking authentication if Firestore rules are locked
+      try {
+        const profileRef = doc(db, 'profiles', googleUser.uid)
+        const profileSnap = await getDoc(profileRef)
+        if (!profileSnap.exists()) {
+          await setDoc(profileRef, {
+            uid:       googleUser.uid,
+            fullName:  googleUser.displayName || '',
+            phone:     googleUser.phoneNumber || '',
+            email:     googleUser.email,
+            createdAt: new Date(),
+          })
+        }
+      } catch (dbErr) {
+        console.warn('Firestore profile sync skipped:', dbErr?.message)
       }
+
+      setProfile({
+        fullName: googleUser.displayName || googleUser.email?.split('@')[0] || 'User',
+        email:    googleUser.email || '',
+        phone:    googleUser.phoneNumber || '',
+      })
+
       return { error: null }
-    } catch (err) { return { error: err } }
+    } catch (err) {
+      return { error: err }
+    }
   }
 
   // ── Logout ────────────────────────────────────────────────
