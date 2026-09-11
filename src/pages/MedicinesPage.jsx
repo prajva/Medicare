@@ -1,48 +1,23 @@
-import { useEffect, useState, useMemo } from 'react'
-import { collection, getDocs, query } from 'firebase/firestore'
-import { db } from '../lib/firebase'
-import { MEDICINES, seedMedicines } from '../lib/seed'
+import { useState, useMemo } from 'react'
+import { MEDICINES } from '../lib/seed'
 import MedicineCard from '../components/medicine/MedicineCard'
 import { Search, X } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 
-const CATEGORIES = ['All', 'Antibiotics', 'Pain Relief', 'Cold & Flu', 'Vitamins', 'Digestive', 'Skin Care', 'Diabetes Care', 'Eye Care']
+const CATEGORIES = ['All', 'Antibiotics', 'Cold & Flu']
 
 export default function MedicinesPage() {
-  const [medicines, setMedicines] = useState(MEDICINES)
-  const [loading, setLoading]     = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
 
   const [search, setSearch]               = useState(searchParams.get('search') || '')
   const [activeCategory, setActiveCategory] = useState(searchParams.get('category') || 'All')
 
-  useEffect(() => {
-    async function load() {
-      try {
-        await seedMedicines()
-        const snap = await getDocs(collection(db, 'medicines'))
-        if (!snap.empty) {
-          const remote = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-          // Merge remote with local MEDICINES so real images & products are always present
-          const remoteNames = new Set(remote.map(r => r.name.toLowerCase()))
-          const combined = [...remote, ...MEDICINES.filter(m => !remoteNames.has(m.name.toLowerCase()))]
-          setMedicines(combined)
-        }
-      } catch (err) {
-        console.warn('Using local catalogue:', err?.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-    load()
-  }, [])
-
-  const filtered = useMemo(() => medicines.filter(m => {
+  const filtered = useMemo(() => MEDICINES.filter(m => {
     const matchesSearch = (m.name || '').toLowerCase().includes(search.toLowerCase()) ||
       (m.description || '').toLowerCase().includes(search.toLowerCase())
     const matchesCategory = activeCategory === 'All' || m.category === activeCategory
     return matchesSearch && matchesCategory
-  }), [medicines, search, activeCategory])
+  }), [search, activeCategory])
 
   function handleCategoryChange(cat) {
     setActiveCategory(cat)
@@ -63,9 +38,9 @@ export default function MedicinesPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-1">Browse Medicines</h1>
+        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-1">Our Medicines</h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm">
-          Verified pharmaceuticals and healthcare products ({filtered.length} available)
+          Displaying verified pharmaceutical products with authentic packaging
         </p>
       </div>
 
@@ -76,7 +51,7 @@ export default function MedicinesPage() {
           type="text"
           value={search}
           onChange={e => handleSearch(e.target.value)}
-          placeholder="Search by medicine name, brand, symptom, or salt..."
+          placeholder="Search by name, antibiotic, or symptoms..."
           className="w-full pl-12 pr-10 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 dark:text-gray-100 shadow-sm"
         />
         {search && (
@@ -106,37 +81,31 @@ export default function MedicinesPage() {
         ))}
       </div>
 
-      {/* Product Grid */}
-      {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className="bg-white dark:bg-gray-800 rounded-2xl h-80 animate-pulse border border-gray-100 dark:border-gray-700" />
-          ))}
-        </div>
-      ) : filtered.length === 0 ? (
+      {/* Product Grid - ONLY the 5 uploaded medicines */}
+      {filtered.length === 0 ? (
         <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 p-8">
           <div className="text-6xl mb-4">🔍</div>
           <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">No medicines found</h3>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">Try adjusting your search terms or browse a different category</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">Try searching for Clariterm, Sinarest, Amoxicillin, or Clarinova</p>
           <button
             onClick={() => { handleSearch(''); handleCategoryChange('All') }}
             className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-semibold hover:underline text-sm"
           >
-            <X className="w-4 h-4" /> Reset Filters
+            <X className="w-4 h-4" /> Show All 5 Products
           </button>
         </div>
       ) : (
         <>
           <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
             <p>
-              Showing <span className="font-bold text-gray-700 dark:text-gray-200">{filtered.length}</span> medicines
+              Showing <span className="font-bold text-gray-700 dark:text-gray-200">{filtered.length}</span> authentic medicines
               {activeCategory !== 'All' && <> in <span className="font-semibold text-blue-600 dark:text-blue-400">{activeCategory}</span></>}
               {search && <> matching "<span className="font-semibold text-gray-700 dark:text-gray-200">{search}</span>"</>}
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map(m => (
-              <MedicineCard key={m.id || m.name} medicine={m} />
+              <MedicineCard key={m.id} medicine={m} />
             ))}
           </div>
         </>
