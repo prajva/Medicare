@@ -21,6 +21,7 @@ export default function CheckoutPage() {
 
   // Prescription Upload State (Creative Feature)
   const [prescriptionName, setPrescriptionName] = useState('')
+  const [prescriptionImage, setPrescriptionImage] = useState(null)
   const [uploadingRx, setUploadingRx] = useState(false)
 
   const grandTotal = Math.max(0, total + DELIVERY_CHARGE - discount)
@@ -72,11 +73,14 @@ export default function CheckoutPage() {
     const file = e.target.files?.[0]
     if (file) {
       setUploadingRx(true)
-      setTimeout(() => {
+      const reader = new FileReader()
+      reader.onload = (event) => {
         setPrescriptionName(file.name)
+        setPrescriptionImage(event.target.result)
         setUploadingRx(false)
         toast.success('Prescription verified by Digital Pharmacist! 🩺')
-      }, 700)
+      }
+      reader.readAsDataURL(file)
     }
   }
 
@@ -111,6 +115,7 @@ export default function CheckoutPage() {
         discountApplied: discount,
         appliedPromo:    appliedCode || null,
         prescription:    prescriptionName || null,
+        prescriptionImage: prescriptionImage || null,
         deliveryName:    form.name.trim(),
         deliveryPhone:   form.phone.trim(),
         deliveryAddress: fullAddress,
@@ -311,7 +316,7 @@ export default function CheckoutPage() {
                     <p className="text-[11px] text-emerald-600 dark:text-emerald-400">✓ Pharmacist Verified</p>
                   </div>
                 </div>
-                <button type="button" onClick={() => setPrescriptionName('')} className="text-gray-400 hover:text-red-500">
+                <button type="button" onClick={() => { setPrescriptionName(''); setPrescriptionImage(null) }} className="text-gray-400 hover:text-red-500">
                   <X className="w-4 h-4" />
                 </button>
               </div>

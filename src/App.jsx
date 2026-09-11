@@ -19,6 +19,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import WishlistPage from './pages/WishlistPage'
 import PrivacyPage from './pages/PrivacyPage'
 import TermsPage from './pages/TermsPage'
+import PrescriptionUploadPage from './pages/PrescriptionUploadPage'
 
 function Layout({ children }) {
   return (
@@ -52,6 +53,7 @@ export default function App() {
                 <Route path="/wishlist" element={<Layout><WishlistPage /></Layout>} />
                 <Route path="/privacy" element={<Layout><PrivacyPage /></Layout>} />
                 <Route path="/terms" element={<Layout><TermsPage /></Layout>} />
+                <Route path="/upload-prescription" element={<Layout><PrescriptionUploadPage /></Layout>} />
 
                 {/* Protected Customer Routes */}
                 <Route path="/checkout" element={

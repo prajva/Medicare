@@ -1,7 +1,7 @@
 import { MEDICINES } from '../lib/seed'
 import MedicineCard from '../components/medicine/MedicineCard'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ShieldCheck, Truck, Clock, HeartPulse, Search, Star } from 'lucide-react'
+import { ArrowRight, ShieldCheck, Truck, Clock, HeartPulse, Search, Star, UploadCloud, FileImage } from 'lucide-react'
 
 export default function HomePage() {
   const features = [
@@ -37,10 +37,10 @@ export default function HomePage() {
               Browse Medicines <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              to="/signup"
+              to="/upload-prescription"
               className="inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3.5 rounded-2xl font-bold transition-all text-sm sm:text-base shadow-xl hover:scale-105"
             >
-              Create Free Account
+              <UploadCloud className="w-5 h-5" /> Upload Prescription & List
             </Link>
           </div>
         </div>
@@ -78,6 +78,54 @@ export default function HomePage() {
         </div>
       </section>
 
+
+      {/* Prescription & Medicine List Upload Feature Banner */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden border border-blue-800/40">
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+            <div className="lg:col-span-7 space-y-4">
+              <div className="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3.5 py-1 rounded-full text-xs font-bold">
+                <FileImage className="w-4 h-4" /> Quick Prescription & Medicine List Upload
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
+                Order Directly with Doctor’s Prescription or Medicine List
+              </h2>
+              <p className="text-blue-100 text-sm sm:text-base leading-relaxed">
+                No need to search for every single medicine manually. Simply snap a photo of your doctor's prescription or handwritten medicine list and upload it. Our registered pharmacist will review the batch numbers, verify availability, and dispatch your order.
+              </p>
+              <div className="flex flex-wrap gap-4 pt-2">
+                <div className="flex items-center gap-2 text-xs text-blue-200">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" /> 100% Genuine Pharmacy
+                </div>
+                <div className="flex items-center gap-2 text-xs text-blue-200">
+                  <Clock className="w-4 h-4 text-amber-400" /> Pharmacist Review in 15 mins
+                </div>
+                <div className="flex items-center gap-2 text-xs text-blue-200">
+                  <Truck className="w-4 h-4 text-blue-400" /> Fast 2–4 Hour Delivery
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 flex flex-col gap-3">
+              <Link
+                to="/upload-prescription"
+                className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold p-5 rounded-2xl shadow-xl shadow-emerald-500/20 text-center transition-all hover:scale-[1.02] flex items-center justify-center gap-3 text-base group"
+              >
+                <UploadCloud className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                <span>Upload Prescription / List Now</span>
+              </Link>
+
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-xs text-blue-200 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-lg">💬</span>
+                  <span>Have questions? Chat live with our <strong>AI Pharmacist Assistant</strong> in the widget!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Products - Strictly the 5 uploaded medicines */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">

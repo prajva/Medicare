@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { ShoppingCart, Heart, Menu, X, LogOut, User, Pill, Package, Sun, Moon } from 'lucide-react'
+import { ShoppingCart, Heart, Menu, X, LogOut, User, Pill, Package, Sun, Moon, UploadCloud } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { useCart } from '../../context/CartContext'
@@ -43,6 +43,10 @@ export default function Navbar() {
             </Link>
             <Link to="/medicines" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm transition-colors">
               Medicines
+            </Link>
+            <Link to="/upload-prescription" className="text-emerald-700 dark:text-emerald-300 font-semibold text-xs flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/50 px-3 py-1.5 rounded-full border border-emerald-200 dark:border-emerald-800/80 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-all shadow-sm">
+              <UploadCloud className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span>Upload Prescription</span>
             </Link>
             {user && (
               <Link to="/orders" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm flex items-center gap-1.5 transition-colors">
@@ -182,6 +186,14 @@ export default function Navbar() {
             className="block text-gray-700 dark:text-gray-200 font-medium py-1.5"
           >
             Medicines
+          </Link>
+          <Link
+            to="/upload-prescription"
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold py-1.5"
+          >
+            <UploadCloud className="w-4 h-4" />
+            Upload Prescription / List
           </Link>
           <Link
             to="/wishlist"
