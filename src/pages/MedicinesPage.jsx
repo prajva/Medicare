@@ -4,7 +4,7 @@ import MedicineCard from '../components/medicine/MedicineCard'
 import { Search, X } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 
-const CATEGORIES = ['All', 'Antibiotics', 'Cold & Flu']
+const CATEGORIES = ['All', 'Antibiotics', 'Cold & Flu', 'Pain Relief', 'Vitamins', 'Digestive']
 
 export default function MedicinesPage() {
   const [searchParams, setSearchParams] = useSearchParams()

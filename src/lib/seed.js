@@ -48,6 +48,56 @@ export const MEDICINES = [
     image_url: '/medicines/clarithromycin-tabs.jpg',
     stock: 70,
     is_featured: true,
+  },
+  {
+    id: 'vip-kit',
+    name: 'Vip-Kit Multivitamin & Calcium Tablets',
+    description: 'Hematinic, Calcium, Multivitamin & Multimineral combi-pack tablets by MP. Complete daily nutritional therapy for pregnancy, recovery, bone strength, and hemoglobin boost.',
+    price: 195.00,
+    category: 'Vitamins',
+    image_url: '/medicines/vip-kit.jpg',
+    stock: 60,
+    is_featured: true,
+  },
+  {
+    id: 'cindot-m',
+    name: 'Cindot-M Tablets (Drotaverine + Mefenamic Acid)',
+    description: 'Drotaverine Hydrochloride and Mefenamic Acid Tablets by Cinerea. Relieves severe abdominal cramps, spasmodic pain, and menstrual distress fast.',
+    price: 110.00,
+    category: 'Pain Relief',
+    image_url: '/medicines/cindot-m.jpg',
+    stock: 80,
+    is_featured: true,
+  },
+  {
+    id: 'antacid-green',
+    name: 'Gastrocool Antacid & Acidity Tablets',
+    description: 'Fast-action relief for acid reflux, indigestion, heartburn, and stomach burn. 10 chewable soothing tablets blister.',
+    price: 35.00,
+    category: 'Digestive',
+    image_url: '/medicines/antacid-green.jpg',
+    stock: 200,
+    is_featured: false,
+  },
+  {
+    id: 'levocetirizine-1al',
+    name: '1-AL Levocetirizine Tablets IP 5mg',
+    description: 'Manufactured by FDC Limited. Trusted anti-allergy antihistamine providing 24-hour relief from runny nose, continuous sneezing, dust allergies, and itching.',
+    price: 52.00,
+    category: 'Cold & Flu',
+    image_url: '/medicines/levocetirizine-1al.jpg',
+    stock: 140,
+    is_featured: true,
+  },
+  {
+    id: 'mycovit-gb',
+    name: 'Mycovit-GB (Methylcobalamin & Gabapentin)',
+    description: 'Methylcobalamin & Gabapentin tablets by Radix. Specialized neurological and nerve pain relief therapy with essential vitamin B12 active coenzyme.',
+    price: 240.00,
+    category: 'Pain Relief',
+    image_url: '/medicines/mycovit-gb.jpg',
+    stock: 55,
+    is_featured: false,
   }
 ]
 
@@ -60,11 +110,15 @@ export function getMedicineImage(medicine) {
   if (name.includes('sinarest') || id.includes('sinarest') || name.includes('cold')) return '/medicines/sinarest-tablets.jpg'
   if (name.includes('amoxicillin') || id.includes('amoxicillin') || name.includes('capsule')) return '/medicines/amoxicillin-capsules.jpg'
   if (name.includes('clarithromycin') || id.includes('clarithromycin')) return '/medicines/clarithromycin-tabs.jpg'
+  if (name.includes('vip-kit') || id.includes('vip-kit')) return '/medicines/vip-kit.jpg'
+  if (name.includes('cindot') || id.includes('cindot')) return '/medicines/cindot-m.jpg'
+  if (name.includes('antacid') || id.includes('antacid') || name.includes('gastrocool')) return '/medicines/antacid-green.jpg'
+  if (name.includes('1-al') || id.includes('1-al') || name.includes('levocetirizine')) return '/medicines/levocetirizine-1al.jpg'
+  if (name.includes('mycovit') || id.includes('mycovit')) return '/medicines/mycovit-gb.jpg'
   if (medicine.image_url && medicine.image_url.startsWith('/medicines/')) return medicine.image_url
-  return '/medicines/clariterm-250.jpg'
+  return null
 }
 
 export async function seedMedicines() {
-  // Medicines are locked to the 5 uploaded products
   return
 }
