@@ -12,9 +12,9 @@ export default function HomePage() {
   ]
 
   const categories = [
-    { name: 'Antibiotics', emoji: '💊', count: '5 Medicines', bg: 'from-blue-100 to-indigo-100 dark:from-blue-950/40 dark:to-indigo-950/40' },
+    { name: 'Antibiotics', emoji: '💊', count: '8 Medicines', bg: 'from-blue-100 to-indigo-100 dark:from-blue-950/40 dark:to-indigo-950/40' },
     { name: 'Cold & Flu',   emoji: '🤧', count: '3 Medicines', bg: 'from-sky-100 to-cyan-100 dark:from-sky-950/40 dark:to-cyan-950/40' },
-    { name: 'Pain Relief', emoji: '🩸', count: '3 Medicines', bg: 'from-red-100 to-orange-100 dark:from-red-950/40 dark:to-orange-950/40' },
+    { name: 'Pain Relief', emoji: '🩸', count: '4 Medicines', bg: 'from-red-100 to-orange-100 dark:from-red-950/40 dark:to-orange-950/40' },
     { name: 'Diabetes Care', emoji: '💉', count: '1 Medicine',  bg: 'from-amber-100 to-yellow-100 dark:from-amber-950/40 dark:to-yellow-950/40' },
     { name: 'Mental Wellness', emoji: '🧠', count: '2 Medicines', bg: 'from-purple-100 to-pink-100 dark:from-purple-950/40 dark:to-pink-950/40' },
     { name: 'Vitamins',    emoji: '🌿', count: '1 Kit',       bg: 'from-green-100 to-teal-100 dark:from-green-950/40 dark:to-teal-950/40' },
