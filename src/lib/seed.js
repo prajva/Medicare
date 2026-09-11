@@ -1,38 +1,159 @@
-// Seed script — paste in browser console or run via Node after setup
-// This adds all medicines to Firestore once.
-// Usage: import and call seedMedicines() once from your app, or run manually.
-
 import { db } from './firebase'
-import { collection, addDoc, getDocs, query, limit } from 'firebase/firestore'
+import { collection, addDoc, getDocs, query, limit, doc, updateDoc } from 'firebase/firestore'
 
-const MEDICINES = [
-  { name: 'Paracetamol 500mg', description: 'Effective pain reliever and fever reducer. Suitable for headaches, muscle pain, and mild fever. Safe for adults and children.', price: 12.50, category: 'Pain Relief', image_url: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', stock: 200, is_featured: true },
-  { name: 'Ibuprofen 400mg', description: 'Anti-inflammatory and analgesic tablet. Provides fast relief from headaches, toothaches, backaches, and menstrual pain.', price: 18.00, category: 'Pain Relief', image_url: 'https://images.unsplash.com/photo-1550572017-edd951b55104?w=400&q=80', stock: 150, is_featured: false },
-  { name: 'Aspirin 325mg', description: 'Relieves minor aches and pains, reduces fever. Also used as a blood thinner for cardiovascular health. 30 tablets per pack.', price: 9.99, category: 'Pain Relief', image_url: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400&q=80', stock: 180, is_featured: false },
-  { name: 'Vitamin C 1000mg', description: 'High-strength Vitamin C supplement to boost immunity and fight oxidative stress. With zinc for enhanced absorption.', price: 35.00, category: 'Vitamins', image_url: 'https://images.unsplash.com/photo-1616671276441-2f2c277b8bf6?w=400&q=80', stock: 300, is_featured: true },
-  { name: 'Multivitamin Daily', description: 'Complete daily multivitamin with 23 essential vitamins and minerals. Supports energy, immunity, and overall well-being.', price: 55.00, category: 'Vitamins', image_url: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&q=80', stock: 250, is_featured: true },
-  { name: 'Omega-3 Fish Oil', description: 'High-quality omega-3 fatty acids from deep-sea fish. Supports heart, brain, and joint health. 60 softgels per pack.', price: 75.00, category: 'Vitamins', image_url: 'https://images.unsplash.com/photo-1576426863848-c21f53c60b19?w=400&q=80', stock: 120, is_featured: false },
-  { name: 'Cetirizine 10mg', description: 'Non-drowsy antihistamine for allergy relief. Effective against hay fever, dust allergies, and skin reactions.', price: 22.00, category: 'Cold & Flu', image_url: 'https://images.unsplash.com/photo-1563213126-a4273aed2016?w=400&q=80', stock: 200, is_featured: false },
-  { name: 'Cough Syrup 100ml', description: 'Soothing cough syrup with honey and tulsi extract. Relieves dry and wet cough, soothes throat irritation.', price: 48.00, category: 'Cold & Flu', image_url: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=400&q=80', stock: 90, is_featured: true },
-  { name: 'Cold & Flu Tablets', description: 'Combined formula with paracetamol, pseudoephedrine, and chlorphenamine. Relieves blocked nose, fever, and headache.', price: 28.50, category: 'Cold & Flu', image_url: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=400&q=80', stock: 160, is_featured: false },
-  { name: 'Antacid Tablets', description: 'Fast-acting antacid providing instant relief from heartburn, acidity, and indigestion. Mint flavour. Pack of 20.', price: 15.00, category: 'Digestive', image_url: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400&q=80', stock: 250, is_featured: false },
-  { name: 'Probiotics Capsules', description: 'Multi-strain probiotic with 10 billion CFU. Supports gut health, digestion, and boosts immune function.', price: 95.00, category: 'Digestive', image_url: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=400&q=80', stock: 80, is_featured: true },
-  { name: 'ORS Sachets (Pack of 10)', description: 'Oral rehydration salts with electrolytes. Rapidly restores fluids lost due to diarrhoea, vomiting, or dehydration.', price: 20.00, category: 'Digestive', image_url: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', stock: 400, is_featured: false },
-  { name: 'Antiseptic Cream 30g', description: 'Broad-spectrum antiseptic cream for minor cuts, burns, and skin infections. Promotes healing and prevents infection.', price: 32.00, category: 'Skin Care', image_url: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&q=80', stock: 140, is_featured: false },
-  { name: 'Moisturising Lotion 200ml', description: 'Deeply hydrating lotion with aloe vera and vitamin E. Suitable for dry and sensitive skin. Dermatologist tested.', price: 85.00, category: 'Skin Care', image_url: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80', stock: 100, is_featured: false },
-  { name: 'Glucometer Test Strips (50)', description: 'High-accuracy blood glucose test strips. For diabetic self-monitoring.', price: 220.00, category: 'Diabetes Care', image_url: 'https://images.unsplash.com/photo-1631815588090-d1bcbe9a2f3d?w=400&q=80', stock: 60, is_featured: false },
-  { name: 'Eye Drops (Lubricating)', description: 'Preservative-free lubricating eye drops for dry, tired, or irritated eyes. Suitable for contact lens wearers.', price: 65.00, category: 'Eye Care', image_url: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=400&q=80', stock: 110, is_featured: false },
+export const MEDICINES = [
+  {
+    name: 'Clariterm 250mg Tablets',
+    description: 'Clarithromycin Tablets IP 250mg by Cafoli Lifecare. Powerful macrolide antibiotic for respiratory tract infections, skin infections, and throat infections. WHO-GMP Certified.',
+    price: 145.00,
+    category: 'Antibiotics',
+    image_url: '/medicines/clariterm-250.jpg',
+    stock: 85,
+    is_featured: true,
+  },
+  {
+    name: 'Sinarest New Anti-Cold Tablets',
+    description: 'No. 1 doctor prescribed formula: Paracetamol + Phenylephrine Hydrochloride + Chlorpheniramine Maleate. Relieves runny nose, sneezing, headache, fever, and nasal congestion.',
+    price: 68.50,
+    category: 'Cold & Flu',
+    image_url: '/medicines/sinarest-tablets.jpg',
+    stock: 150,
+    is_featured: true,
+  },
+  {
+    name: 'Amoxicillin 500mg Capsules',
+    description: 'High quality broad-spectrum penicillin antibiotic capsules. Treats bacterial infections of the chest, ears, throat, urinary tract, and dental infections. 10 capsules per blister.',
+    price: 92.00,
+    category: 'Antibiotics',
+    image_url: '/medicines/amoxicillin-capsules.jpg',
+    stock: 120,
+    is_featured: true,
+  },
+  {
+    name: 'Clarinova-250 Tablets',
+    description: 'Clarithromycin Tablets IP 250mg manufactured by Mankind Pharma. Proven efficacy in treating upper and lower respiratory tract infections. Strip of 6 tablets.',
+    price: 162.00,
+    category: 'Antibiotics',
+    image_url: '/medicines/clarinova-250.jpg',
+    stock: 95,
+    is_featured: true,
+  },
+  {
+    name: 'Clarithromycin 250mg Film Coated',
+    description: 'Oral route film-coated clarithromycin tablets 250mg. 2 blisters of 10 film-coated tablets for systemic bacterial therapy and fast recovery.',
+    price: 185.00,
+    category: 'Antibiotics',
+    image_url: '/medicines/clarithromycin-tabs.jpg',
+    stock: 70,
+    is_featured: false,
+  },
+  {
+    name: 'Paracetamol 500mg Fast Relief',
+    description: 'Effective pain reliever and fever reducer. Suitable for headaches, muscle ache, toothache, and mild fever. Safe for adults and seniors.',
+    price: 18.50,
+    category: 'Pain Relief',
+    image_url: '/medicines/sinarest-tablets.jpg',
+    stock: 200,
+    is_featured: true,
+  },
+  {
+    name: 'Vitamin C 1000mg + Zinc',
+    description: 'High-potency immunity booster tablets. Fights seasonal infections, promotes collagen synthesis and antioxidant defense.',
+    price: 65.00,
+    category: 'Vitamins',
+    image_url: '',
+    stock: 180,
+    is_featured: true,
+  },
+  {
+    name: 'Cetirizine 10mg Anti-Allergy',
+    description: 'Non-drowsy 24-hour antihistamine. Effective for relief from pollen, dust allergies, hives, and itchy watery eyes.',
+    price: 24.00,
+    category: 'Cold & Flu',
+    image_url: '',
+    stock: 160,
+    is_featured: false,
+  },
+  {
+    name: 'Probiotics 10 Billion CFU',
+    description: 'Digestive balance and gut health capsules. Restores healthy gut flora after antibiotic treatment and improves nutrient absorption.',
+    price: 120.00,
+    category: 'Digestive',
+    image_url: '/medicines/amoxicillin-capsules.jpg',
+    stock: 75,
+    is_featured: false,
+  },
+  {
+    name: 'ORS Electrolyte Hydration Drink',
+    description: 'WHO recommended oral rehydration formula with essential electrolytes. Restores lost body fluids and restores vital energy fast.',
+    price: 22.00,
+    category: 'Digestive',
+    image_url: '',
+    stock: 220,
+    is_featured: false,
+  },
+  {
+    name: 'Antiseptic Healing Cream 30g',
+    description: 'Broad-spectrum antimicrobial first-aid ointment for minor cuts, scrapes, burns, and abrasions.',
+    price: 45.00,
+    category: 'Skin Care',
+    image_url: '',
+    stock: 110,
+    is_featured: false,
+  },
+  {
+    name: 'Glucometer Test Strips (Pack of 50)',
+    description: 'High-accuracy self-monitoring blood glucose test strips. Delivers results within 5 seconds with tiny blood sample size.',
+    price: 299.00,
+    category: 'Diabetes Care',
+    image_url: '',
+    stock: 50,
+    is_featured: false,
+  },
+  {
+    name: 'Lubricating Eye Drops 10ml',
+    description: 'Preservative-free sterile ophthalmic solution for dry, tired, strained eyes due to screen exposure or dry air.',
+    price: 85.00,
+    category: 'Eye Care',
+    image_url: '',
+    stock: 90,
+    is_featured: false,
+  }
 ]
+
+export function getMedicineImage(medicine) {
+  if (!medicine) return null
+  const name = (medicine.name || '').toLowerCase()
+  if (name.includes('clariterm')) return '/medicines/clariterm-250.jpg'
+  if (name.includes('clarinova')) return '/medicines/clarinova-250.jpg'
+  if (name.includes('sinarest') || name.includes('cold') || name.includes('paracetamol')) return '/medicines/sinarest-tablets.jpg'
+  if (name.includes('amoxicillin') || name.includes('capsule')) return '/medicines/amoxicillin-capsules.jpg'
+  if (name.includes('clarithromycin')) return '/medicines/clarithromycin-tabs.jpg'
+  if (medicine.image_url && medicine.image_url.startsWith('/medicines/')) return medicine.image_url
+  return null
+}
 
 export async function seedMedicines() {
   const col = collection(db, 'medicines')
   const existing = await getDocs(query(col, limit(1)))
-  if (!existing.empty) {
-    console.log('Medicines already seeded.')
+  
+  // If empty, insert full list
+  if (existing.empty) {
+    for (const med of MEDICINES) {
+      await addDoc(col, { ...med, createdAt: new Date() })
+    }
+    console.log('✅ Fresh medicines seeded successfully!')
     return
   }
+
+  // If already exists, make sure our featured uploaded medicines are present
+  const allCurrent = await getDocs(col)
+  const currentNames = new Set(allCurrent.docs.map(d => d.data().name.toLowerCase()))
+
   for (const med of MEDICINES) {
-    await addDoc(col, { ...med, createdAt: new Date() })
+    if (!currentNames.has(med.name.toLowerCase())) {
+      await addDoc(col, { ...med, createdAt: new Date() })
+      console.log(`+ Seeded new item: ${med.name}`)
+    }
   }
-  console.log('✅ Medicines seeded successfully!')
 }

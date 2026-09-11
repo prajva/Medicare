@@ -1,6 +1,7 @@
 import { useWishlist } from '../context/WishlistContext'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
+import { getMedicineImage } from '../lib/seed'
 import { Link, useNavigate } from 'react-router-dom'
 import { Heart, ShoppingCart, Trash2, ShoppingBag } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -57,12 +58,18 @@ export default function WishlistPage() {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {wishlist.map(item => {
           const style = CATEGORY_STYLES[item.category] || DEFAULT_STYLE
+          const imageSrc = getMedicineImage(item) || item.image_url
           return (
             <div key={item.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden group">
               <Link to={`/medicines/${item.id}`}>
-                <div className={`bg-gradient-to-br ${style.bg} h-32 flex items-center justify-center relative`}>
-                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full"/>
-                  <span className="text-5xl">{style.emoji}</span>
+                <div className="bg-gray-50 dark:bg-gray-700/40 h-32 flex items-center justify-center p-2 relative overflow-hidden">
+                  {imageSrc ? (
+                    <img src={imageSrc} alt={item.name} className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
+                  ) : (
+                    <div className={`w-full h-full bg-gradient-to-br ${style.bg} rounded-xl flex items-center justify-center`}>
+                      <span className="text-4xl">{style.emoji}</span>
+                    </div>
+                  )}
                 </div>
               </Link>
               <div className="p-3">

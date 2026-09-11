@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../context/AuthContext'
+import { getMedicineImage } from '../lib/seed'
 import { Package, ChevronDown, ChevronUp, Clock, ShoppingBag } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
@@ -108,20 +109,26 @@ export default function OrdersPage() {
 
             {expanded[order.id] && (
               <div className="border-t border-gray-100 px-5 py-4 bg-gray-50 space-y-3">
-                {order.items?.map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg overflow-hidden flex-shrink-0">
-                      <img src={item.imageUrl || `https://placehold.co/40x40/dbeafe/2563eb?text=M`}
-                        alt={item.name} className="w-full h-full object-cover"
-                        onError={e => { e.target.src = `https://placehold.co/40x40/dbeafe/2563eb?text=M` }} />
+                {order.items?.map((item, idx) => {
+                  const img = getMedicineImage(item) || item.imageUrl
+                  return (
+                    <div key={idx} className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-white dark:bg-gray-700 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100 dark:border-gray-600 flex items-center justify-center p-1">
+                        {img ? (
+                          <img src={img} alt={item.name} className="max-h-full max-w-full object-contain"
+                            onError={e => { e.target.src = `https://placehold.co/48x48/dbeafe/2563eb?text=Rx` }} />
+                        ) : (
+                          <span className="text-xl">💊</span>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-800 dark:text-gray-100 line-clamp-1">{item.name}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Qty: {item.quantity} × ₹{Number(item.unitPrice).toFixed(2)}</p>
+                      </div>
+                      <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">₹{Number(item.subtotal).toFixed(2)}</span>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-800 line-clamp-1">{item.name}</p>
-                      <p className="text-xs text-gray-500">Qty: {item.quantity} × ₹{Number(item.unitPrice).toFixed(2)}</p>
-                    </div>
-                    <span className="text-sm font-semibold text-gray-700">₹{Number(item.subtotal).toFixed(2)}</span>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
           </div>

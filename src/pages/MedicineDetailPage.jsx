@@ -5,6 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { useWishlist } from '../context/WishlistContext'
+import { getMedicineImage } from '../lib/seed'
 import { ShoppingCart, ArrowLeft, Star, Package, Tag, CheckCircle, Heart, ShieldCheck, Truck } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -83,25 +84,37 @@ export default function MedicineDetailPage() {
       </button>
 
       <div className="grid md:grid-cols-2 gap-10">
-        {/* Visual Showcase */}
+        {/* Visual Showcase: Real Image or Category Art */}
         <div className="relative">
-          <div className={`bg-gradient-to-br ${style.bg} rounded-3xl overflow-hidden aspect-square flex items-center justify-center relative shadow-lg`}>
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full" />
-            <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-white/10 rounded-full" />
-            <span className="text-9xl drop-shadow-md select-none transform hover:scale-105 transition-transform duration-300">
-              {style.emoji}
-            </span>
+          <div className="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 overflow-hidden aspect-square flex items-center justify-center relative shadow-sm p-6">
+            {getMedicineImage(medicine) ? (
+              <img
+                src={getMedicineImage(medicine)}
+                alt={medicine.name}
+                className="max-h-full max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+              />
+            ) : (
+              <div className={`w-full h-full bg-gradient-to-br ${style.bg} rounded-2xl flex items-center justify-center relative overflow-hidden shadow-inner`}>
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full" />
+                <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-white/10 rounded-full" />
+                <span className="text-9xl drop-shadow-md select-none transform hover:scale-105 transition-transform duration-300">
+                  {style.emoji}
+                </span>
+              </div>
+            )}
+            
             {medicine.is_featured && (
               <span className="absolute top-4 left-4 bg-amber-400 text-amber-900 text-sm font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
                 <Star className="w-4 h-4" fill="currentColor" /> Featured
               </span>
             )}
+
             <button
               onClick={handleWishlist}
-              className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-all ${
+              className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-all shadow-md ${
                 wishlisted
-                  ? 'bg-white text-rose-500 shadow-md scale-110'
-                  : 'bg-black/20 text-white hover:bg-white hover:text-rose-500'
+                  ? 'bg-white text-rose-500 scale-110'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-500 hover:text-rose-500'
               }`}
               title="Save to Wishlist"
             >
