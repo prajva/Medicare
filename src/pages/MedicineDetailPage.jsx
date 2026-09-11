@@ -5,11 +5,12 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { useWishlist } from '../context/WishlistContext'
-import { getMedicineImage } from '../lib/seed'
+import { getMedicineImage, MEDICINES } from '../lib/seed'
 import { ShoppingCart, ArrowLeft, Star, Package, Tag, CheckCircle, Heart, ShieldCheck, Truck } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 const CATEGORY_STYLES = {
+  'Antibiotics':   { bg: 'from-blue-500 to-indigo-600',  emoji: '💊', light: 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300' },
   'Pain Relief':   { bg: 'from-red-400 to-orange-400',   emoji: '💊', light: 'bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400' },
   'Vitamins':      { bg: 'from-green-400 to-teal-400',   emoji: '🌿', light: 'bg-green-50 text-green-600 dark:bg-green-950/40 dark:text-green-400' },
   'Cold & Flu':    { bg: 'from-blue-400 to-cyan-400',    emoji: '🤧', light: 'bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400' },
@@ -26,18 +27,33 @@ export default function MedicineDetailPage() {
   const { addItem } = useCart()
   const { user } = useAuth()
   const { isWishlisted, toggle } = useWishlist()
-  const [medicine, setMedicine] = useState(null)
-  const [loading, setLoading] = useState(true)
+  
+  const localMatch = MEDICINES.find(m => m.id === id || (m.name && m.name.toLowerCase().replace(/\s+/g, '-').includes(id.toLowerCase())))
+  const [medicine, setMedicine] = useState(localMatch || null)
+  const [loading, setLoading] = useState(!localMatch)
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
 
   useEffect(() => {
-    getDoc(doc(db, 'medicines', id)).then(snap => {
-      if (!snap.exists()) { navigate('/medicines'); return }
-      setMedicine({ id: snap.id, ...snap.data() })
+    if (localMatch) {
+      setMedicine(localMatch)
       setLoading(false)
-    })
-  }, [id, navigate])
+    }
+    getDoc(doc(db, 'medicines', id))
+      .then(snap => {
+        if (snap.exists()) {
+          setMedicine({ id: snap.id, ...snap.data() })
+        } else if (!localMatch) {
+          const fallback = MEDICINES.find(m => m.id === id) || MEDICINES[0]
+          setMedicine(fallback)
+        }
+      })
+      .catch(err => {
+        console.warn('Using local fallback for medicine detail:', err?.message)
+        if (!localMatch) setMedicine(MEDICINES[0])
+      })
+      .finally(() => setLoading(false))
+  }, [id, localMatch])
 
   function handleAddToCart() {
     if (!user) { toast.error('Please login to add items to cart'); navigate('/login'); return }
