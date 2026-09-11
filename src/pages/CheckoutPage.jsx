@@ -107,6 +107,7 @@ export default function CheckoutPage() {
       const createdOrder = await createOrder(userId, {
         userEmail:       user?.email || 'customer@medicare.com',
         totalAmount:     grandTotal,
+        total:           grandTotal,
         discountApplied: discount,
         appliedPromo:    appliedCode || null,
         prescription:    prescriptionName || null,
@@ -114,7 +115,7 @@ export default function CheckoutPage() {
         deliveryPhone:   form.phone.trim(),
         deliveryAddress: fullAddress,
         notes:           form.notes.trim() || '',
-        paymentMethod:   'cod',
+        paymentMethod:   'COD',
         status:          'placed',
         items: cart.map(item => ({
           medicineId:  item.id,
