@@ -4,11 +4,12 @@ import { db } from './firebase'
 const LOCAL_STORAGE_PREFIX = 'medicare_orders_'
 
 export const ORDER_STAGES = [
-  { id: 'placed',            label: 'Order Confirmed',       desc: 'Order placed & payment verified (COD)', step: 1 },
-  { id: 'verified',          label: 'Pharmacist Verified',   desc: 'Medicines & batch numbers inspected',    step: 2 },
-  { id: 'dispatched',        label: 'Packed & Dispatched',   desc: 'Sealed with tamper-evident strip',      step: 3 },
-  { id: 'out_for_delivery',  label: 'Out for Delivery',      desc: 'Delivery executive on the way',          step: 4 },
-  { id: 'delivered',         label: 'Delivered',             desc: 'Package handed over at doorstep',       step: 5 },
+  { id: 'placed',            label: 'Order Confirmed',                 desc: 'Order placed & payment verified (COD)', step: 1 },
+  { id: 'sent_to_store',     label: 'Order List Sent to Medical Store', desc: 'Order list transmitted to partner pharmacy store for dispensing', step: 2 },
+  { id: 'verified',          label: 'Pharmacist Verified',             desc: 'Medicines & batch numbers inspected',    step: 3 },
+  { id: 'dispatched',        label: 'Packed & Dispatched',             desc: 'Sealed with tamper-evident strip',      step: 4 },
+  { id: 'out_for_delivery',  label: 'Out for Delivery',                desc: 'Delivery executive on the way',          step: 5 },
+  { id: 'delivered',         label: 'Delivered',                       desc: 'Package handed over at doorstep',       step: 6 },
 ]
 
 export function getLocalOrders(userId) {
@@ -118,13 +119,14 @@ export function advanceOrderStatus(userId, orderId) {
   const order = orders[idx]
   const currentStep = order.statusStep || (
     order.status === 'placed' ? 1 :
-    order.status === 'verified' ? 2 :
-    order.status === 'dispatched' ? 3 :
-    order.status === 'out_for_delivery' ? 4 :
-    order.status === 'delivered' ? 5 : 1
+    order.status === 'sent_to_store' ? 2 :
+    order.status === 'verified' ? 3 :
+    order.status === 'dispatched' ? 4 :
+    order.status === 'out_for_delivery' ? 5 :
+    order.status === 'delivered' ? 6 : 1
   )
 
-  const nextStep = Math.min(5, currentStep + 1)
+  const nextStep = Math.min(6, currentStep + 1)
   const nextStage = ORDER_STAGES[nextStep - 1]
 
   order.statusStep = nextStep

@@ -25,14 +25,15 @@ export default function OrderTrackerModal({ order, onClose, onOrderUpdated, curr
   const [currentOrder, setCurrentOrder] = useState(order)
   const currentStep = currentOrder.statusStep || (
     currentOrder.status === 'placed' ? 1 :
-    currentOrder.status === 'verified' ? 2 :
-    currentOrder.status === 'dispatched' ? 3 :
-    currentOrder.status === 'out_for_delivery' ? 4 :
-    currentOrder.status === 'delivered' ? 5 : 1
+    currentOrder.status === 'sent_to_store' ? 2 :
+    currentOrder.status === 'verified' ? 3 :
+    currentOrder.status === 'dispatched' ? 4 :
+    currentOrder.status === 'out_for_delivery' ? 5 :
+    currentOrder.status === 'delivered' ? 6 : 1
   )
 
   function handleSimulateNext() {
-    if (currentStep >= 5) {
+    if (currentStep >= 6) {
       toast.success('This order has already been successfully delivered! 📦')
       return
     }
