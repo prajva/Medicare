@@ -118,7 +118,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-2">10. CONTACT US</h2>
             <p>If you have any questions about this Privacy Policy or how your data is handled, please contact us at:</p>
-            <p className="font-semibold text-blue-600 dark:text-blue-400 mt-1">Email: support@medicareplus.example.com</p>
+            <p className="font-semibold text-blue-600 dark:text-blue-400 mt-1">Email: medicaresupport1@gmail.com</p>
           </section>
 
           <div className="mt-8 p-4 bg-blue-50 dark:bg-gray-700/50 rounded-2xl border border-blue-100 dark:border-gray-600 text-xs text-gray-500 dark:text-gray-400">

@@ -54,7 +54,7 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-3 text-sm tracking-wider uppercase">Contact Us</h3>
             <ul className="space-y-2.5 text-sm">
               <li className="flex items-center gap-2 text-gray-400"><Phone className="w-4 h-4 text-blue-400" /> +91 98765 43210</li>
-              <li className="flex items-center gap-2 text-gray-400"><Mail className="w-4 h-4 text-blue-400" /> support@medicareplus.example.com</li>
+              <li className="flex items-center gap-2 text-gray-400"><Mail className="w-4 h-4 text-blue-400" /> medicaresupport1@gmail.com</li>
               <li className="flex items-center gap-2 text-gray-400"><MapPin className="w-4 h-4 text-blue-400" /> Amaravati, Andhra Pradesh</li>
             </ul>
           </div>

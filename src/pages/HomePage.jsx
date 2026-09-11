@@ -11,15 +11,7 @@ export default function HomePage() {
     { icon: HeartPulse,  title: 'Expert Verified',   desc: 'Pharmacist-approved formulas', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400' },
   ]
 
-  const categories = [
-    { name: 'Antibiotics', emoji: '💊', count: '8 Medicines', bg: 'from-blue-100 to-indigo-100 dark:from-blue-950/40 dark:to-indigo-950/40' },
-    { name: 'Cold & Flu',   emoji: '🤧', count: '3 Medicines', bg: 'from-sky-100 to-cyan-100 dark:from-sky-950/40 dark:to-cyan-950/40' },
-    { name: 'Pain Relief', emoji: '🩸', count: '4 Medicines', bg: 'from-red-100 to-orange-100 dark:from-red-950/40 dark:to-orange-950/40' },
-    { name: 'Diabetes Care', emoji: '💉', count: '1 Medicine',  bg: 'from-amber-100 to-yellow-100 dark:from-amber-950/40 dark:to-yellow-950/40' },
-    { name: 'Mental Wellness', emoji: '🧠', count: '2 Medicines', bg: 'from-purple-100 to-pink-100 dark:from-purple-950/40 dark:to-pink-950/40' },
-    { name: 'Vitamins',    emoji: '🌿', count: '1 Kit',       bg: 'from-green-100 to-teal-100 dark:from-green-950/40 dark:to-teal-950/40' },
-    { name: 'Digestive',   emoji: '🫁', count: '1 Medicine',  bg: 'from-emerald-100 to-teal-100 dark:from-emerald-950/40 dark:to-teal-950/40' },
-  ]
+
 
   return (
     <div className="min-h-screen">
@@ -86,34 +78,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-extrabold text-gray-900 dark:text-gray-100">Shop by Category</h2>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Explore our authentic medicine catalogue</p>
-          </div>
-          <Link to="/medicines" className="text-blue-600 dark:text-blue-400 text-sm font-semibold hover:underline flex items-center gap-1">
-            View All <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-          {categories.map(cat => (
-            <Link
-              key={cat.name}
-              to={`/medicines?category=${encodeURIComponent(cat.name)}`}
-              className={`bg-gradient-to-br ${cat.bg} rounded-2xl p-5 hover:scale-102 transition-transform cursor-pointer border border-transparent dark:border-gray-700/50 shadow-sm flex items-center gap-4`}
-            >
-              <div className="text-4xl">{cat.emoji}</div>
-              <div>
-                <p className="text-base font-bold text-gray-900 dark:text-gray-100">{cat.name}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">{cat.count}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
 
       {/* Products - Strictly the 5 uploaded medicines */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">

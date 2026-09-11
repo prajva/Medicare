@@ -30,7 +30,19 @@ export default function LoginPage() {
     const { error } = await signIn({ email: form.email, password: form.password })
     setLoading(false)
     if (error) {
-      toast.error(error.message.includes('invalid-credential') ? 'Incorrect email or password' : error.message)
+      if (error.code === 'auth/user-not-found') {
+        toast.error('No account found with this email. Please sign up.')
+        setErrors(err => ({ ...err, email: 'No account found' }))
+      } else if (error.code === 'auth/email-already-in-use' || error.message?.includes('email-already-in-use')) {
+        toast.error('Email already exists')
+      } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.message?.includes('invalid-credential')) {
+        toast.error('Incorrect email or password')
+      } else if (error.code === 'auth/too-many-requests') {
+        toast.error('Too many failed attempts. Please reset password or try again later.')
+      } else {
+        const cleanMsg = error.message?.replace(/^Firebase:\s*/i, '').replace(/\(auth\/[^)]+\)\.?/g, '').trim() || 'Incorrect email or password'
+        toast.error(cleanMsg)
+      }
     } else {
       toast.success('Welcome back! 👋')
       navigate(from, { replace: true })

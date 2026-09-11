@@ -62,8 +62,24 @@ export default function SignupPage() {
     setLoading(true)
     const { error } = await signUp({ email: form.email, password: form.password, fullName: form.fullName, phone: form.phone })
     setLoading(false)
-    if (error) toast.error(error.message)
-    else { toast.success('Account created! Welcome to MediCare Plus 🎉'); navigate('/') }
+    if (error) {
+      if (error.code === 'auth/email-already-in-use' || error.message?.includes('email-already-in-use') || error.message?.includes('already in use')) {
+        toast.error('Email already exists')
+        setErrors(err => ({ ...err, email: 'Email already exists' }))
+      } else if (error.code === 'auth/invalid-email' || error.message?.includes('invalid-email')) {
+        toast.error('Invalid email address')
+        setErrors(err => ({ ...err, email: 'Invalid email address' }))
+      } else if (error.code === 'auth/weak-password' || error.message?.includes('weak-password')) {
+        toast.error('Password must be at least 6 characters')
+        setErrors(err => ({ ...err, password: 'Must be at least 6 characters' }))
+      } else {
+        const cleanMsg = error.message?.replace(/^Firebase:\s*/i, '').replace(/\(auth\/[^)]+\)\.?/g, '').trim() || 'Authentication failed'
+        toast.error(cleanMsg)
+      }
+    } else {
+      toast.success('Account created! Welcome to MediCare Plus 🎉')
+      navigate('/')
+    }
   }
 
   const handle = field => e => {

@@ -140,7 +140,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-2">15. CONTACT US</h2>
             <p>For any questions regarding these Terms and Conditions, please contact us at:</p>
-            <p className="font-semibold text-indigo-600 dark:text-indigo-400 mt-1">Email: support@medicareplus.example.com</p>
+            <p className="font-semibold text-indigo-600 dark:text-indigo-400 mt-1">Email: medicaresupport1@gmail.com</p>
           </section>
 
           <div className="mt-8 p-4 bg-indigo-50 dark:bg-gray-700/50 rounded-2xl border border-indigo-100 dark:border-gray-600 text-xs text-gray-500 dark:text-gray-400">
