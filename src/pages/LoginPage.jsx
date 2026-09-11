@@ -106,13 +106,18 @@ export default function LoginPage() {
 
               {/* Password */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                  <Link to="/forgot-password" className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                    Forgot password?
+                  </Link>
+                </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"/>
                   <input type={showPass ? 'text' : 'password'} value={form.password}
                     onChange={e => { setForm(f => ({...f, password: e.target.value})); setErrors(r => ({...r, password: undefined})) }}
                     placeholder="Your password"
-                    className={`w-full pl-10 pr-10 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.password ? 'border-red-400 bg-red-50' : 'border-gray-200'}`}/>
+                    className={`w-full pl-10 pr-10 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 ${errors.password ? 'border-red-400 bg-red-50' : 'border-gray-200'}`}/>
                   <button type="button" onClick={() => setShowPass(!showPass)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                     {showPass ? <EyeOff className="w-4 h-4"/> : <Eye className="w-4 h-4"/>}
@@ -127,9 +132,9 @@ export default function LoginPage() {
               </button>
             </form>
 
-            <p className="text-center text-sm text-gray-500 mt-5">
+            <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-5">
               Don't have an account?{' '}
-              <Link to="/signup" className="text-blue-600 font-semibold hover:underline">Create one free</Link>
+              <Link to="/signup" className="text-blue-600 dark:text-blue-400 font-semibold hover:underline">Create one free</Link>
             </p>
           </div>
         </div>

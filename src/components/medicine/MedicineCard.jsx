@@ -1,26 +1,28 @@
-import { ShoppingCart, Star } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { ShoppingCart, Star, Heart } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
 import { useAuth } from '../../context/AuthContext'
+import { useWishlist } from '../../context/WishlistContext'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
 
 const CATEGORY_STYLES = {
-  'Pain Relief':   { bg: 'from-red-400 to-orange-400',   emoji: '💊', light: 'bg-red-50 text-red-600' },
-  'Vitamins':      { bg: 'from-green-400 to-teal-400',   emoji: '🌿', light: 'bg-green-50 text-green-600' },
-  'Cold & Flu':    { bg: 'from-blue-400 to-cyan-400',    emoji: '🤧', light: 'bg-blue-50 text-blue-600' },
-  'Digestive':     { bg: 'from-purple-400 to-pink-400',  emoji: '🫁', light: 'bg-purple-50 text-purple-600' },
-  'Skin Care':     { bg: 'from-yellow-400 to-amber-400', emoji: '✨', light: 'bg-yellow-50 text-yellow-700' },
-  'Diabetes Care': { bg: 'from-rose-400 to-red-400',     emoji: '🩸', light: 'bg-rose-50 text-rose-600' },
-  'Eye Care':      { bg: 'from-sky-400 to-blue-400',     emoji: '👁️', light: 'bg-sky-50 text-sky-600' },
+  'Pain Relief':   { bg: 'from-red-400 to-orange-400',   emoji: '💊', light: 'bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400' },
+  'Vitamins':      { bg: 'from-green-400 to-teal-400',   emoji: '🌿', light: 'bg-green-50 text-green-600 dark:bg-green-950/40 dark:text-green-400' },
+  'Cold & Flu':    { bg: 'from-blue-400 to-cyan-400',    emoji: '🤧', light: 'bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400' },
+  'Digestive':     { bg: 'from-purple-400 to-pink-400',  emoji: '🫁', light: 'bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400' },
+  'Skin Care':     { bg: 'from-yellow-400 to-amber-400', emoji: '✨', light: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-950/40 dark:text-yellow-400' },
+  'Diabetes Care': { bg: 'from-rose-400 to-red-400',     emoji: '🩸', light: 'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400' },
+  'Eye Care':      { bg: 'from-sky-400 to-blue-400',     emoji: '👁️', light: 'bg-sky-50 text-sky-600 dark:bg-sky-950/40 dark:text-sky-400' },
 }
-const DEFAULT_STYLE = { bg: 'from-blue-400 to-indigo-400', emoji: '💉', light: 'bg-blue-50 text-blue-600' }
+const DEFAULT_STYLE = { bg: 'from-blue-400 to-indigo-400', emoji: '💉', light: 'bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400' }
 
 export default function MedicineCard({ medicine }) {
-  const { addItem }  = useCart()
-  const { user }     = useAuth()
-  const navigate     = useNavigate()
+  const { addItem }     = useCart()
+  const { user }        = useAuth()
+  const { isWishlisted, toggle } = useWishlist()
+  const navigate        = useNavigate()
   const style = CATEGORY_STYLES[medicine.category] || DEFAULT_STYLE
+  const wishlisted = isWishlisted(medicine.id)
 
   function handleAddToCart(e) {
     e.preventDefault()
@@ -31,25 +33,48 @@ export default function MedicineCard({ medicine }) {
     })
   }
 
+  function handleWishlist(e) {
+    e.preventDefault()
+    toggle(medicine)
+    if (!wishlisted) {
+      toast.success(`Saved ${medicine.name} to wishlist! ❤️`, { icon: '❤️' })
+    } else {
+      toast('Removed from wishlist', { icon: '🤍' })
+    }
+  }
+
   return (
     <Link to={`/medicines/${medicine.id}`} className="group block h-full">
-      <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 overflow-hidden transition-all duration-300 h-full flex flex-col hover:-translate-y-1">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-300 h-full flex flex-col hover:-translate-y-1">
 
         {/* Visual Header — gradient + emoji */}
         <div className={`relative bg-gradient-to-br ${style.bg} h-40 flex items-center justify-center overflow-hidden`}>
-          {/* Decorative circles */}
           <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full"/>
           <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-white/10 rounded-full"/>
-          {/* Emoji */}
+          
           <span className="text-6xl drop-shadow-sm group-hover:scale-110 transition-transform duration-300 relative z-10">
             {style.emoji}
           </span>
+
           {/* Featured badge */}
           {medicine.is_featured && (
-            <span className="absolute top-2 left-2 bg-amber-400 text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+            <span className="absolute top-2 left-2 bg-amber-400 text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
               <Star className="w-3 h-3" fill="currentColor"/> Featured
             </span>
           )}
+
+          {/* Wishlist Heart Button */}
+          <button
+            onClick={handleWishlist}
+            aria-label="Save to Wishlist"
+            className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md transition-all ${
+              wishlisted
+                ? 'bg-white text-rose-500 shadow-md scale-110'
+                : 'bg-black/20 text-white hover:bg-white hover:text-rose-500'
+            }`}
+          >
+            <Heart className="w-4 h-4" fill={wishlisted ? 'currentColor' : 'none'} />
+          </button>
         </div>
 
         {/* Content */}
@@ -59,20 +84,20 @@ export default function MedicineCard({ medicine }) {
             {medicine.category}
           </span>
 
-          <h3 className="font-bold text-gray-800 text-sm leading-snug mb-1 line-clamp-2 group-hover:text-blue-600 transition-colors flex-1">
+          <h3 className="font-bold text-gray-800 dark:text-gray-100 text-sm leading-snug mb-1 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors flex-1">
             {medicine.name}
           </h3>
-          <p className="text-gray-400 text-xs line-clamp-1 mb-3">
+          <p className="text-gray-400 dark:text-gray-400 text-xs line-clamp-1 mb-3">
             {medicine.description}
           </p>
 
-          <div className="flex items-center justify-between mt-auto">
+          <div className="flex items-center justify-between mt-auto pt-2 border-t border-gray-50 dark:border-gray-700/60">
             <div>
-              <span className="text-xl font-extrabold text-gray-900">₹{Number(medicine.price).toFixed(0)}</span>
-              <span className="text-gray-400 text-xs ml-0.5">.{String(medicine.price.toFixed(2)).split('.')[1]}</span>
+              <span className="text-xl font-extrabold text-gray-900 dark:text-white">₹{Number(medicine.price).toFixed(0)}</span>
+              <span className="text-gray-400 text-xs ml-0.5">.{String(Number(medicine.price).toFixed(2)).split('.')[1]}</span>
             </div>
             <button onClick={handleAddToCart}
-              className={`flex items-center gap-1.5 bg-gradient-to-r ${style.bg} text-white text-xs px-3 py-2 rounded-xl transition-all font-semibold hover:shadow-md hover:scale-105 active:scale-95`}>
+              className={`flex items-center gap-1.5 bg-gradient-to-r ${style.bg} text-white text-xs px-3.5 py-2 rounded-xl transition-all font-semibold hover:shadow-md hover:scale-105 active:scale-95`}>
               <ShoppingCart className="w-3.5 h-3.5"/>
               Add
             </button>
