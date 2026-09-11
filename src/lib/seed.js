@@ -47,7 +47,7 @@ export const MEDICINES = [
     category: 'Antibiotics',
     image_url: '/medicines/clarithromycin-tabs.jpg',
     stock: 70,
-    is_featured: true,
+    is_featured: false,
   },
   {
     id: 'vip-kit',
@@ -98,6 +98,56 @@ export const MEDICINES = [
     image_url: '/medicines/mycovit-gb.jpg',
     stock: 55,
     is_featured: false,
+  },
+  {
+    id: 'pyregem-paracetamol',
+    name: 'Pyregem Paracetamol Tablets IP',
+    description: 'Manufactured by Bioheld. Fast-acting antipyretic and pain reliever in iconic blue blister pack (10x15 tablets). Treats fever, headache, bodyache, and colds.',
+    price: 28.00,
+    category: 'Pain Relief',
+    image_url: '/medicines/pyregem-paracetamol.jpg',
+    stock: 180,
+    is_featured: true,
+  },
+  {
+    id: 'doxomas-a',
+    name: 'Doxomas-A (Doxofylline & Ambroxol HCl)',
+    description: 'Manufactured by Max Life. Bronchodilator and mucolytic tablets for asthma, chronic obstructive pulmonary disease (COPD), cough, and chest congestion.',
+    price: 135.00,
+    category: 'Cold & Flu',
+    image_url: '/medicines/doxomas-a.jpg',
+    stock: 90,
+    is_featured: false,
+  },
+  {
+    id: 'glimash-1',
+    name: 'Glimash-1 (Glimepiride & Metformin ER)',
+    description: 'Manufactured by A1 Cure. Extended Release anti-diabetic dual action therapy for effective blood sugar regulation in Type 2 Diabetes.',
+    price: 155.00,
+    category: 'Diabetes Care',
+    image_url: '/medicines/glimash-1.jpg',
+    stock: 100,
+    is_featured: true,
+  },
+  {
+    id: 'somasure',
+    name: 'Somasure (Flupentixol & Melitracen Tablets)',
+    description: 'Manufactured by Salvia. Pink round coated tablets for management of anxiety, stress-induced psychosomatic symptoms, and mild depression.',
+    price: 175.00,
+    category: 'Mental Wellness',
+    image_url: '/medicines/somasure.jpg',
+    stock: 65,
+    is_featured: false,
+  },
+  {
+    id: 'wellqut-25',
+    name: 'Wellqut-25 (Quetiapine Tablets IP 25mg)',
+    description: 'Manufactured by Stanmore. Atypical antipsychotic tablets for mood stabilization, bipolar conditions, and severe sleep/anxiety disorders. 5x4x10 pack.',
+    price: 210.00,
+    category: 'Mental Wellness',
+    image_url: '/medicines/wellqut-25.jpg',
+    stock: 45,
+    is_featured: false,
   }
 ]
 
@@ -107,14 +157,19 @@ export function getMedicineImage(medicine) {
   const id = (medicine.id || '').toLowerCase()
   if (name.includes('clariterm') || id.includes('clariterm')) return '/medicines/clariterm-250.jpg'
   if (name.includes('clarinova') || id.includes('clarinova')) return '/medicines/clarinova-250.jpg'
-  if (name.includes('sinarest') || id.includes('sinarest') || name.includes('cold')) return '/medicines/sinarest-tablets.jpg'
-  if (name.includes('amoxicillin') || id.includes('amoxicillin') || name.includes('capsule')) return '/medicines/amoxicillin-capsules.jpg'
+  if (name.includes('sinarest') || id.includes('sinarest')) return '/medicines/sinarest-tablets.jpg'
+  if (name.includes('amoxicillin') || id.includes('amoxicillin')) return '/medicines/amoxicillin-capsules.jpg'
   if (name.includes('clarithromycin') || id.includes('clarithromycin')) return '/medicines/clarithromycin-tabs.jpg'
   if (name.includes('vip-kit') || id.includes('vip-kit')) return '/medicines/vip-kit.jpg'
   if (name.includes('cindot') || id.includes('cindot')) return '/medicines/cindot-m.jpg'
   if (name.includes('antacid') || id.includes('antacid') || name.includes('gastrocool')) return '/medicines/antacid-green.jpg'
   if (name.includes('1-al') || id.includes('1-al') || name.includes('levocetirizine')) return '/medicines/levocetirizine-1al.jpg'
   if (name.includes('mycovit') || id.includes('mycovit')) return '/medicines/mycovit-gb.jpg'
+  if (name.includes('pyregem') || id.includes('pyregem')) return '/medicines/pyregem-paracetamol.jpg'
+  if (name.includes('doxomas') || id.includes('doxomas')) return '/medicines/doxomas-a.jpg'
+  if (name.includes('glimash') || id.includes('glimash')) return '/medicines/glimash-1.jpg'
+  if (name.includes('somasure') || id.includes('somasure')) return '/medicines/somasure.jpg'
+  if (name.includes('wellqut') || id.includes('wellqut')) return '/medicines/wellqut-25.jpg'
   if (medicine.image_url && medicine.image_url.startsWith('/medicines/')) return medicine.image_url
   return null
 }
