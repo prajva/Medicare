@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
-import { db } from '../lib/firebase'
+import { createOrder } from '../lib/orders'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { MapPin, Phone, User, FileText, CheckCircle, ShoppingBag, Truck, Tag, UploadCloud, FileCheck, X } from 'lucide-react'
@@ -103,9 +102,8 @@ export default function CheckoutPage() {
     try {
       const fullAddress = `${form.address}, ${form.city} - ${form.pincode}`
 
-      // Save order to Firestore
-      const orderRef = await addDoc(collection(db, 'orders'), {
-        userId:          user.uid,
+      // Save order to dual-layer database (Cloud Firestore + Persistent Local Storage)
+      const createdOrder = await createOrder(user.uid, {
         userEmail:       user.email,
         totalAmount:     grandTotal,
         discountApplied: discount,
@@ -116,7 +114,7 @@ export default function CheckoutPage() {
         deliveryAddress: fullAddress,
         notes:           form.notes.trim() || '',
         paymentMethod:   'cod',
-        status:          'pending',
+        status:          'placed',
         items: cart.map(item => ({
           medicineId:  item.id,
           name:        item.name,
@@ -125,16 +123,15 @@ export default function CheckoutPage() {
           unitPrice:   item.price,
           subtotal:    item.price * item.quantity,
         })),
-        createdAt: serverTimestamp(),
       })
 
       clearCart()
-      setOrderId(orderRef.id)
+      setOrderId(createdOrder.id)
       setSuccess(true)
-      toast.success('Order placed successfully! 🎉')
+      toast.success('Order placed & recorded in database! 🎉')
     } catch (err) {
-      console.error(err)
-      toast.error('Failed to place order. Please try again.')
+      console.error('Order placement error:', err)
+      toast.error('Failed to place order. Please check connection.')
     } finally {
       setLoading(false)
     }
@@ -178,13 +175,13 @@ export default function CheckoutPage() {
               </div>
             )}
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <button onClick={() => navigate('/orders')}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold text-sm transition-colors shadow-sm">
-              View My Orders
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold text-sm transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2">
+              <Truck className="w-4 h-4" /> Track Order Live
             </button>
             <button onClick={() => navigate('/medicines')}
-              className="flex-1 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 py-3 rounded-xl font-semibold text-sm transition-colors">
+              className="flex-1 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 py-3.5 rounded-xl font-semibold text-sm transition-colors">
               Continue Shopping
             </button>
           </div>
